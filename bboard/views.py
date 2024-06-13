@@ -1,13 +1,12 @@
-from django.http import HttpResponse
+from django.shortcuts import render
 
 from .models import Bb
 
 #КОНТРОЛЛЕРЫ
 def index(request):
-    s = 'Объявления\r\n\r\n\r\n'
-    for bb in Bb.objects.order_by('-published'):
-        s += bb.title + '\r\n' + bb.content + '\r\n\r\n'
-    return HttpResponse(s, content_type='text/plain; charset=utf-8')
+    bbs = Bb.objects.order_by('-published')
+    return render(request, 'bboard/index.html', {'bbs': bbs})
 
 def t_index(request):
-    return HttpResponse('Проверка Test')
+    bbs = ['1', '2', '3']
+    return render(request, 'bboard/index.html', {'bbs': bbs})
