@@ -8,9 +8,9 @@
         <h1>Объявления</h1>
         <h2>Рубрика: {{current_rubric.name}}</h2>
         <div>
-            <a href="/bboard/">Главная</a>
+            <a href="{% url 'index' %}">Главная</a>
             {% for rubric in rubrics %}
-            <a href="/bboard/{{rubric.pk}}/">{{rubric.name}}</a>
+            <a href="{% url 'rubric_bbs' rubric.pk %}">{{rubric.name}}</a>
             {% endfor %}
         </div>
         {% for bb in bbs %}
