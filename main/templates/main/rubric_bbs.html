@@ -1,0 +1,46 @@
+{% extends "layout/basic.html" %}
+
+{% load thumbnail %}
+{% load static %}
+{% load django_bootstrap5 %}
+
+{% block title %}
+    {{ rubric }}
+{% endblock %}
+
+{% block content %}
+    <h2 class="mb-2">{{ rubric }}</h2>
+    <form class="row row-cols-md-auto justify-content-end">
+        {% bootstrap_field form.keyword show_label=False wrapper_class='col-12' %}
+        <div class='col-12'>
+            {% bootstrap_button 'Искать' %}
+        </div>
+    </form>
+    {% if bbs %}
+    <div class='vstack gap-3 my-4'>
+        {% for bb in bbs %}
+            <div class='card' {% if bb.author.pk == user.pk %}style="background-color: lightyellow;"{% endif %}>
+                {% url "main:bb_detail" rubric_pk=rubric.pk pk=bb.pk as url %}
+                <div class='row p-3'>
+                    <a class="col-md-2" href="{{ url }}{{ all }}">
+                        {% if bb.image %}
+                            <img class='img-fluid' src="{% thumbnail bb.image 'default' %}">
+                            {% else %}    
+                            <img class='img-fluid' src="{% static  'main/empty.jpg' %}">
+                        {% endif %}
+                    </a>
+                    <div class='col-md-10 card-body'>
+                        <h3 class='card-title'>
+                            <a href="{{ url }}{{ all }}">{{ bb.title }}</a>
+                        </h3>
+                        <div class="card-text mb-2">{{ bb.content }}</div>
+                        <p class="card-text fw-bold">{{ bb.price }} руб.</p>
+                        <p class="card-text text-end fst-italic">{{ bb.created_at }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    {% bootstrap_pagination page url=keyword %}
+    {% endif %}
+    {% endblock %}

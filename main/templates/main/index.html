@@ -1,0 +1,35 @@
+{% extends "layout/basic.html" %}
+
+{% load thumbnail %}
+{% load static %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+    <h2 class="mb-2">Последние 10 объявлений</h2>
+    {% if bbs %}
+        <div class='vstack gap-3 my-4'>
+            {% for bb in bbs %}
+                <div class='card' {% if bb.author.pk == user.pk %}style="background-color: lightyellow;"{% endif %}>
+                    {% url "main:bb_detail" rubric_pk=rubric.pk pk=bb.pk as url %}
+                    <div class='row p-3'>
+                        <a class="col-md-2" href="{% url "main:bb_detail" bb.rubric.pk bb.pk%}">
+                            {% if bb.image %}
+                                <img class='img-fluid' src="{% thumbnail bb.image 'default' %}">
+                                {% else %}    
+                                <img class='img-fluid' src="{% static  'main/empty.jpg' %}">
+                            {% endif %}
+                        </a>
+                        <div class='col-md-10 card-body'>
+                            <h3 class='card-title'>
+                                <a href="{% url "main:bb_detail" bb.rubric.pk bb.pk%}">{{ bb.title }}</a>
+                            </h3>
+                            <div class="card-text mb-2">{{ bb.content }}</div>
+                            <p class="card-text fw-bold">{{ bb.price }} руб.</p>
+                            <p class="card-text text-end fst-italic">{{ bb.created_at }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}

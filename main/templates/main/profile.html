@@ -1,0 +1,50 @@
+{% extends "layout/basic.html" %}
+
+{% load thumbnail %}
+{% load static %}
+{% load django_bootstrap5 %}
+
+{% block title %}Профиль пользователя{% endblock %}
+
+{% block content %}
+    <h2>Профиль пользователя {{ user.username }}</h2>
+    {% if user.first_name and user.last_name%}
+        <p>Здравствуйте, {{user.first_name}} {{user.last_name}}!</p>
+    {% else %}
+        <p>Здравствуйте!</p>
+    {% endif %}
+    <hr>
+    <h3>Ваши объявления</h3>
+    <h2 class="mb-2">{{ rubric }}</h2>
+    <p><a href="{% url "main:profile_bb_add" %}">Добавить объявление</a></p>
+    {% if bbs %}
+    <div class='vstack gap-3 my-4'>
+        {% for bb in bbs %}
+            <div class='card'>
+                <div class='row p-3'>
+                    <a class="col-md-2" href="{% url "main:profile_bb_detail" pk=bb.pk%}">
+                        {% if bb.image %}
+                            <img class='img-fluid' src="{% thumbnail bb.image 'default' %}">
+                            {% else %}    
+                            <img class='img-fluid' src="{% static  'main/empty.jpg' %}">
+                        {% endif %}
+                    </a>
+                    <div class='col-md-10 card-body'>
+                        <h3 class='card-title'>
+                            <a href="{% url "main:profile_bb_detail" pk=bb.pk%}">{{ bb.title }}</a>
+                        </h3>
+                        <div class="card-text mb-2">{{ bb.content }}</div>
+                        <p class="card-text fw-bold">{{ bb.price }} руб.</p>
+                        <p class="card-text text-end fst-italic">{{ bb.created_at }}</p>
+                        <p class='card-text text-end'>
+                            <a href="{% url "main:profile_bb_edit" pk=bb.pk %}">Исправить</a>
+                            <a href="{% url "main:profile_bb_delete" pk=bb.pk %}">Удалить</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "layout/basic.html" %}
+
+{% load django_bootstrap5 %}
+
+{% block title %}{{ bb.title }} - {{bb.rubric.name}}{% endblock %}
+
+{% block content %}
+    <div class="row mt-3">
+        {% if bb.image %}
+            <div class="col-md-auto">
+                <img src="{{ bb.image.url }}" class="main-image">
+            </div>
+        {% endif %}
+        <div class="col">
+            <h2>{{ bb.title }}</h2>
+            <p>{{bb.content }}</p>
+            <p class="fw-bold">{{ bb.price }} руб.</p>
+            <p>{{ bb.contacts }}</p>
+            <p class="text-end fst-italic">Добавлено {{ bb.created_at }}</p>
+        </div>
+    </div>
+    {% if ais %}
+        <div class="d-flex justify-content-between flex-wrap mt-5">
+            {% for ai in ais %}
+                <div class="d-flex justify-content-center align-items-center">
+                    <img class="additional-image" src="{{ ai.image.url }}">
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <p>
+        <a href="{% url "main:rubric_bbs" pk=bb.rubric.pk %}{{ all }}">Вернуться к "{{bb.rubric.name}}"</a>
+    </p>
+    <h4 class='mt-5'>Новый комментарий</h4>
+    <form method="post">
+        {% csrf_token %}
+        {% bootstrap_form form layout='hotizontal' %}
+        {% bootstrap_button 'Добавить' %}
+    </form>
+    {% if comments %}
+        <div class='vstack gap-3 mt-5'>
+            {% for comment in comments %}
+                <div class='p-2 border'>
+                    <h5>{{ comment.author }}</h5>
+                    <p>{{ comment.content }}</p>
+                    <p class="text-end fst-italic">{{ comment.created_at }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}

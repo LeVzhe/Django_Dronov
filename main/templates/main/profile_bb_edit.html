@@ -1,0 +1,17 @@
+{% extends "layout/basic.html" %}
+
+{% load django_bootstrap5 %}
+
+{% block title %}
+    Изменение объявления - Профиль пользователя
+{% endblock %}
+
+{% block content %}
+    <h2>Изменить объявление</h2>
+    <form method='post' enctype='multipart/form-data'>
+        {% csrf_token %}
+        {% bootstrap_form form layout='horizontal' %}
+        {% bootstrap_formset formset layout='horizontal' %}
+        {% bootstrap_button 'Изменить' %}
+    </form>
+{% endblock %}
